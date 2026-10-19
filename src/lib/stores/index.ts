@@ -245,6 +245,8 @@ type Settings = {
 	pinnedModels?: string[];
 	// MCP tool names switched off per server, keyed by `server:mcp:<id>`
 	mcpDisabledTools?: Record<string, string[]>;
+	// Tool ids enabled by default in new chats
+	tools?: string[];
 	toolServers?: never[];
 	detectArtifacts?: boolean;
 	showUpdateToast?: boolean;

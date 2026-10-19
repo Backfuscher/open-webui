@@ -29,6 +29,7 @@
 	import Search from '../icons/Search.svelte';
 	import Connections from './Settings/Connections.svelte';
 	import Integrations from './Settings/Integrations.svelte';
+	import Connectors from './Settings/Connectors.svelte';
 	import DatabaseSettings from '../icons/DatabaseSettings.svelte';
 	import SettingsAlt from '../icons/SettingsAlt.svelte';
 	import Link from '../icons/Link.svelte';
@@ -36,6 +37,7 @@
 	import SoundHigh from '../icons/SoundHigh.svelte';
 	import InfoCircle from '../icons/InfoCircle.svelte';
 	import WrenchAlt from '../icons/WrenchAlt.svelte';
+	import Cube from '../icons/Cube.svelte';
 	import Face from '../icons/Face.svelte';
 	import AppNotification from '../icons/AppNotification.svelte';
 	import AdjustmentsHorizontal from '../icons/AdjustmentsHorizontal.svelte';
@@ -147,6 +149,7 @@
 		shortcuts: $i18n.t('Basics'),
 		connections: $i18n.t('Services'),
 		tools: $i18n.t('Services'),
+		connectors: $i18n.t('Services'),
 		personalization: $i18n.t('Preferences'),
 		audio: $i18n.t('Preferences'),
 		data_controls: $i18n.t('Data'),
@@ -222,6 +225,12 @@
 			titleKey: 'settings.personal.tools.title',
 			title: $i18n.t('settings.personal.tools.title'),
 			searchPrefixes: ['settings.personal.tools.']
+		},
+		{
+			id: 'connectors',
+			titleKey: 'Connectors',
+			title: $i18n.t('Connectors'),
+			searchPrefixes: []
 		},
 		{
 			id: 'personalization',
@@ -397,6 +406,10 @@
 					($user?.role === 'admin' ||
 						($user?.role === 'user' && $user?.permissions?.features?.direct_tool_servers))
 				);
+			}
+
+			if (tab.id === 'connectors') {
+				return $config?.features?.enable_tool_servers ?? true;
 			}
 
 			if (tab.id === 'interface') {
@@ -661,6 +674,19 @@
 								<span>{$i18n.t('settings.personal.tools.title')}</span>
 							</button>
 						{/if}
+					{:else if tabId === 'connectors'}
+						<button
+							role="tab"
+							aria-controls="tab-connectors"
+							aria-selected={selectedTab === 'connectors'}
+							class={tabButtonClass(selectedTab === 'connectors')}
+							on:click={() => {
+								selectTab('connectors');
+							}}
+						>
+							<Cube className="size-3.5" strokeWidth="2" />
+							<span>{$i18n.t('Connectors')}</span>
+						</button>
 					{:else if tabId === 'personalization'}
 						<button
 							role="tab"
@@ -833,6 +859,8 @@
 						toast.success($i18n.t('Settings saved successfully!'));
 					}}
 				/>
+			{:else if selectedTab === 'connectors'}
+				<Connectors onManage={() => selectTab('admin:integrations')} />
 			{:else if selectedTab === 'personalization'}
 				<Personalization
 					{saveSettings}
