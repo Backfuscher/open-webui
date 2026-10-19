@@ -44,6 +44,8 @@
 	import ChevronRight from '$lib/components/icons/ChevronRight.svelte';
 	import ChevronLeft from '$lib/components/icons/ChevronLeft.svelte';
 	import LinkSlash from '$lib/components/icons/LinkSlash.svelte';
+	import ChevronDown from '$lib/components/icons/ChevronDown.svelte';
+	import McpToolList from './InputMenu/McpToolList.svelte';
 
 	const i18n = getContext('i18n') as any;
 
@@ -99,6 +101,7 @@
 	let skillSearchDebounceTimer: ReturnType<typeof setTimeout>;
 	let toolRequestId = 0;
 	let skillRequestId = 0;
+	let expandedMcpToolIds: string[] = [];
 
 	$: toolIds = Object.keys(tools ?? {});
 	$: skillIds = Object.keys(skills ?? {});
@@ -594,6 +597,34 @@
 											</div>
 										</div>
 
+										{#if toolId.startsWith('server:mcp:') && (tools?.[toolId]?.authenticated ?? true)}
+											<div class="shrink-0">
+												<Tooltip content={$i18n.t('Tools')}>
+													<button
+														class="self-center w-fit text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition rounded-full"
+														type="button"
+														aria-label={$i18n.t('Tools')}
+														aria-expanded={expandedMcpToolIds.includes(toolId)}
+														on:click={(e) => {
+															e.stopPropagation();
+															e.preventDefault();
+															expandedMcpToolIds = expandedMcpToolIds.includes(toolId)
+																? expandedMcpToolIds.filter((id) => id !== toolId)
+																: [...expandedMcpToolIds, toolId];
+														}}
+													>
+														<ChevronDown
+															className="size-3.5 transition-transform {expandedMcpToolIds.includes(
+																toolId
+															)
+																? 'rotate-180'
+																: ''}"
+														/>
+													</button>
+												</Tooltip>
+											</div>
+										{/if}
+
 										{#if tools?.[toolId]?.authenticated === true && toolId.startsWith('server:mcp:')}
 											<div class="shrink-0">
 												<Tooltip content={$i18n.t('Disconnect OAuth')}>
@@ -652,6 +683,10 @@
 											<Switch state={selectedToolIds.includes(toolId)} />
 										</div>
 									</button>
+
+									{#if expandedMcpToolIds.includes(toolId)}
+										<McpToolList {toolId} serverEnabled={selectedToolIds.includes(toolId)} />
+									{/if}
 								{/each}
 							</div>
 						{/if}
