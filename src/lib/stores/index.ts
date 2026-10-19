@@ -243,6 +243,8 @@ type OllamaModelDetails = {
 
 type Settings = {
 	pinnedModels?: string[];
+	// MCP tool names switched off per server, keyed by `server:mcp:<id>`
+	mcpDisabledTools?: Record<string, string[]>;
 	toolServers?: never[];
 	detectArtifacts?: boolean;
 	showUpdateToast?: boolean;

@@ -196,6 +196,13 @@ async def build_tool_server_headers(
     return headers, cookies
 
 
+def get_user_disabled_mcp_tools(user, server_id: str) -> set[str]:
+    """Tool names the user switched off for an MCP server in the chat integrations menu."""
+    ui_settings = (user.settings.ui if user and user.settings else None) or {}
+    disabled = (ui_settings.get('mcpDisabledTools') or {}).get(f'server:mcp:{server_id}') or []
+    return {name for name in disabled if isinstance(name, str)}
+
+
 async def connect_mcp_server(
     request,
     server_id: str,

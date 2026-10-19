@@ -158,6 +158,7 @@ from open_webui.utils.tools import (
     get_terminal_tools,
     get_tools,
     get_updated_tool_function,
+    get_user_disabled_mcp_tools,
 )
 from starlette.responses import JSONResponse, Response, StreamingResponse
 
@@ -2674,6 +2675,10 @@ async def process_chat_payload(request, form_data, user, metadata, model):
 
                         client, tool_specs = result
                         mcp_clients[server_id] = client
+
+                        disabled_tool_names = get_user_disabled_mcp_tools(user, server_id)
+                        if disabled_tool_names:
+                            tool_specs = [spec for spec in tool_specs if spec['name'] not in disabled_tool_names]
 
                         if client.instructions:
                             form_data['messages'] = add_or_update_system_message(
