@@ -46,6 +46,7 @@
 	import LinkSlash from '$lib/components/icons/LinkSlash.svelte';
 	import ChevronDown from '$lib/components/icons/ChevronDown.svelte';
 	import McpToolList from './InputMenu/McpToolList.svelte';
+	import PlugIcon from '$lib/components/connectors/PlugIcon.svelte';
 
 	const i18n = getContext('i18n') as any;
 
@@ -691,6 +692,19 @@
 							</div>
 						{/if}
 					</div>
+
+					{#if $config?.features?.enable_tool_servers}
+						<a
+							class="flex w-full items-center gap-2 h-[1.6875rem] px-2 text-[0.8125rem] text-gray-500 rounded-xl hover:bg-gray-50/40 hover:text-gray-900 dark:hover:bg-gray-800/40 dark:hover:text-white"
+							href="/connectors"
+							on:click={() => {
+								show = false;
+							}}
+						>
+							<PlugIcon className="size-3.5" />
+							{$i18n.t('Manage connectors')}
+						</a>
+					{/if}
 				</div>
 			{:else if tab === 'skills' && skills}
 				<div class="flex max-h-72 min-h-0 flex-col gap-0.5" in:fly={{ x: 20, duration: 150 }}>

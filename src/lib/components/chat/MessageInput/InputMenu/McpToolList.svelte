@@ -1,6 +1,11 @@
 <script context="module" lang="ts">
 	// Discovery opens an MCP session, so keep results while the page lives.
 	const specsCache: Record<string, { name: string; description?: string }[]> = {};
+
+	// Call after a server was reconnected or removed so its tools load fresh.
+	export const clearSpecsCache = (toolId: string) => {
+		delete specsCache[toolId];
+	};
 </script>
 
 <script lang="ts">
